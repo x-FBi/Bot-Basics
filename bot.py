@@ -55,6 +55,11 @@ async def ping_pong(ctx):
 @bot.tree.command(name="ping")  # Define a guild command.
 async def _ping(interaction: discord.Interaction):
     await interaction.response.send_message(f"Pong! ({bot.latency*1000}ms)")
+
+# Reply to sender
+@bot.tree.command(name="hello", description="Say Hello!")
+async def sayHello(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Hi there!", ephemeral=True)
 ##
 
 # NO NEED TO EDIT PAST THIS LINE
