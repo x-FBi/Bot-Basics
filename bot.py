@@ -6,7 +6,6 @@ import os.path
 import sys
 import discord
 import asyncio  # Timer
-from discord_slash import SlashCommand # Slash Commands after pip install
 from dotenv import load_dotenv
 from discord.ext import tasks
 from discord.ext import commands
@@ -22,7 +21,6 @@ Fuck Python in it's stupid magical ass.
 TOKEN = os.getenv('DISCORD_TOKEN')  # BOT Token
 intents = discord.Intents.default()
 intents.message_content = True
-slash = SlashCommand(client, sync_commands=True)  # Declares slash commands through the client
 
 bot = commands.Bot(description=description, command_prefix="?", intents=intents) # Bot listens to ? as command
 
@@ -32,6 +30,10 @@ async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
  #   print(f"Invite link: https://discordapp.com/oauth2/authorize?client_id={bot.user.id}&scope=bot&permissions=8") # To invite the bot
     print('------')
+    try:
+        synced = await bot.tree.sync()
+    except Execption as e:
+        print(e)
 # END
 
 # Events -- Things that happen
@@ -46,15 +48,13 @@ async def on_message(message: discord.Message):
              help="Test the bots responsiveness.",
              brief="Is the bot alive? ... am I alive?")
 async def ping_pong(ctx):
-	await ctx.channel.send("pong")
+	await ctx.channel.send(f"Pong! Bot Ping is: ({bot.latency*1000}ms)")
 ##
 
-
 ## Slash Commands
-@slash.slash(name="ping", guild_ids=)  # Define a guild command.
-async def _ping(ctx):
-    await ctx.send(f"Pong! ({client.latency*1000}ms)")
-
+@bot.tree.command(name="ping")  # Define a guild command.
+async def _ping(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Pong! ({bot.latency*1000}ms)")
 ##
 
 # NO NEED TO EDIT PAST THIS LINE
