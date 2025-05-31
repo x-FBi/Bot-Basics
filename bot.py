@@ -25,15 +25,17 @@ intents.message_content = True
 bot = commands.Bot(description=description, command_prefix="?", intents=intents) # Bot listens to ? as command
 
 # Start the bot, and print in CLI window
+## Sync, I was informed NOT to run sync from on_ready
+async def setup_hook():
+    print(f"Syncing Slash Commands")
+    await bot.tree.sync()
+    print(f"Slash Sommands Sync'd")
+bot.setup_hook = setup_hook
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
  #   print(f"Invite link: https://discordapp.com/oauth2/authorize?client_id={bot.user.id}&scope=bot&permissions=8") # To invite the bot
     print('------')
-    try:
-        synced = await bot.tree.sync()
-    except Execption as e:
-        print(e)
 # END
 
 # Events -- Things that happen
@@ -41,6 +43,7 @@ async def on_ready():
 async def on_message(message: discord.Message):
     if message.author.bot: # Let's not respond to ourselves.
          return
+    await bot.process_commands(message) # Allow ourselves to do Other on_message commands
 #
 
 ## Bot Commands
